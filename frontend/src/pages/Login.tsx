@@ -21,10 +21,17 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert("Login Success");
-
-      navigate("/home");
-
-      console.log(res);
+      
+      const role = res.data.user.role;
+      
+      if (role === "BUYER") {
+        navigate("/buyer");
+      } else if (role === "SELLER") {
+        navigate("/seller");
+      } else if (role === "ADMIN") {
+        navigate("/admin");
+      }
+      
     } catch (error: any) {
       alert(error.response?.data?.message);
     }

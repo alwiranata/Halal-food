@@ -2,16 +2,24 @@ import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
+import BuyerDashboard from "./pages/buyer/BuyerDashboard";
+import SellerDashboard from "./pages/seller/SellerDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import SellerRequests from "./pages/admin/AdminSellerRequests";
+import NotFoundPages from "./pages/404";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-
       <Route path="/register" element={<Register />} />
+      <Route path="/buyer" element={<BuyerDashboard />} />
+      <Route path="/seller" element={<SellerDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/sellers" element={<SellerRequests />} />
 
-      <Route path="/home" element={<Home />} />
+      {/* Halaman 404 */}
+      <Route path="*" element={<NotFoundPages />} />
     </Routes>
   );
 }
