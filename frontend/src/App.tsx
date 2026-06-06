@@ -7,7 +7,7 @@ import SellerDashboard from "./pages/seller/SellerDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import SellerRequests from "./pages/admin/AdminSellerRequests";
 import NotFoundPages from "./pages/404";
-
+import Products from "./pages/seller/Products";
 function App() {
   return (
     <Routes>
@@ -17,7 +17,7 @@ function App() {
       <Route path="/seller" element={<SellerDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/sellers" element={<SellerRequests />} />
-
+      <Route path="/seller/products" element={<Products />} />
       {/* Halaman 404 */}
       <Route path="*" element={<NotFoundPages />} />
     </Routes>

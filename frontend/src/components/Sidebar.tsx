@@ -15,7 +15,9 @@ export default function Sidebar() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    navigate("/");
+    navigate("/", {
+      replace: true,
+    });
   };
 
   return (
@@ -29,18 +31,11 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2 p-4 flex-1">
         {role === "ADMIN" && (
           <>
-            <NavLink
-              to="/admin"
-              end
-              className={menuClass}
-            >
+            <NavLink to="/admin" end className={menuClass}>
               Dashboard
             </NavLink>
 
-            <NavLink
-              to="/admin/sellers"
-              className={menuClass}
-            >
+            <NavLink to="/admin/sellers" className={menuClass}>
               Pengajuan Seller
             </NavLink>
           </>
@@ -48,25 +43,15 @@ export default function Sidebar() {
 
         {role === "SELLER" && (
           <>
-            <NavLink
-              to="/seller"
-              end
-              className={menuClass}
-            >
+            <NavLink to="/seller" end className={menuClass}>
               Dashboard
             </NavLink>
 
-            <NavLink
-              to="/seller/products"
-              className={menuClass}
-            >
+            <NavLink to="/seller/products" className={menuClass}>
               Produk Saya
             </NavLink>
 
-            <NavLink
-              to="/seller/orders"
-              className={menuClass}
-            >
+            <NavLink to="/seller/orders" className={menuClass}>
               Pesanan
             </NavLink>
           </>
@@ -74,32 +59,19 @@ export default function Sidebar() {
 
         {role === "BUYER" && (
           <>
-            <NavLink
-              to="/buyer"
-              end
-              className={menuClass}
-            >
+            <NavLink to="/buyer" end className={menuClass}>
               Dashboard
             </NavLink>
 
-            <NavLink
-              to="/buyer/products"
-              className={menuClass}
-            >
+            <NavLink to="/buyer/products" className={menuClass}>
               Produk
             </NavLink>
 
-            <NavLink
-              to="/buyer/cart"
-              className={menuClass}
-            >
+            <NavLink to="/buyer/cart" className={menuClass}>
               Keranjang
             </NavLink>
 
-            <NavLink
-              to="/buyer/orders"
-              className={menuClass}
-            >
+            <NavLink to="/buyer/orders" className={menuClass}>
               Pesanan
             </NavLink>
           </>
