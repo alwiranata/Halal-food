@@ -9,6 +9,7 @@ export default function SellerDashboard() {
     totalProducts: 0,
     totalOrders: 0,
     pendingOrders: 0,
+    totalRevenue: 0,
   });
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function SellerDashboard() {
         </div>
 
         {/* Statistik */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div className="bg-white rounded-2xl shadow-sm p-6 border">
             <h3 className="text-gray-500 text-sm">Total Produk</h3>
 
@@ -69,6 +70,14 @@ export default function SellerDashboard() {
             <h3 className="text-gray-500 text-sm">Pesanan Pending</h3>
 
             <p className="text-3xl font-bold mt-2">{stats.pendingOrders}</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm p-6 border">
+            <h3 className="text-gray-500 text-sm">Total Pendapatan</h3>
+
+            <p className="text-3xl font-bold mt-2">
+              Rp {Number(stats.totalRevenue).toLocaleString("id-ID")}
+            </p>
           </div>
         </div>
 

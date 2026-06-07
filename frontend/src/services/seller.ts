@@ -35,18 +35,13 @@ export const getProducts = async () => {
 // =========================
 // CREATE PRODUCT (TAMBAHAN BARU)
 // =========================
-export const createProduct = async (data: {
-  product_name: string;
-  description: string;
-  price: number;
-  stock: number;
-  is_halal?: boolean;
-}) => {
+export const createProduct = async (data: FormData) => {
   const token = localStorage.getItem("token");
 
   const response = await axios.post(`${API}/products`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 
@@ -56,21 +51,13 @@ export const createProduct = async (data: {
 // =========================
 // UPDATE PRODUCT (TAMBAHAN BARU)
 // =========================
-export const updateProduct = async (
-  id: number,
-  data: {
-    product_name?: string;
-    description?: string;
-    price?: number;
-    stock?: number;
-    is_halal?: boolean;
-  },
-) => {
+export const updateProduct = async (id: number, data: FormData) => {
   const token = localStorage.getItem("token");
 
   const response = await axios.put(`${API}/products/${id}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
     },
   });
 
@@ -90,4 +77,35 @@ export const deleteProduct = async (id: number) => {
   });
 
   return response.data;
+};
+
+export const getSellerOrders = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await axios.get(`${API}/orders`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
+};
+
+export const updateOrderStatus = async (
+  id: number,
+  status: "ACCEPTED" | "CANCELLED"
+) => {
+  const token = localStorage.getItem("token");
+
+  const res = await axios.put(
+    `${API}/orders/${id}/status`,
+    { status },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
 };
