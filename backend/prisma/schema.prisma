@@ -20,16 +20,18 @@ enum SellerStatus {
 
 enum OrderStatus {
   PENDING
-  PAID
+  ACCEPTED
+  CANCELLED
 }
 
 model User {
-  id_user  Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
-  role     Role   @default(BUYER)
-
+  id_user    Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  phone    String?
+  address  String?
+  role       Role     @default(BUYER)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

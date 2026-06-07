@@ -1,5 +1,69 @@
 import prisma from "../config/prisma";
 import { CreateProductInput, UpdateProductInput } from "../validations/product";
+import { OrderStatus } from "@prisma/client";
+
+export const getSellerOrders = async (id_seller: number) => {
+  return await prisma.order.findMany({
+    where: {
+      orderDetails: {
+        some: {
+          product: {
+            id_seller,
+          },
+        },
+      },
+    },
+    include: {
+      user: {
+        select: {
+          id_user: true,
+          name: true,
+          email: true,
+          address: true,
+          phone: true,
+          role: true,
+          created_at: true,
+        },
+      },
+      orderDetails: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: {
+      order_date: "desc",
+    },
+  });
+};
+
+export const updateOrderStatus = async (
+  id_order: number,
+  id_seller: number,
+  status: OrderStatus,
+) => {
+  const order = await prisma.order.findFirst({
+    where: {
+      id_order,
+      orderDetails: {
+        some: {
+          product: {
+            id_seller,
+          },
+        },
+      },
+    },
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  return await prisma.order.update({
+    where: { id_order },
+    data: { status },
+  });
+};
 
 export const createProduct = async (
   data: CreateProductInput & {
@@ -31,7 +95,6 @@ export const getProductById = async (id_product: number, id_seller: number) => {
       id_product,
       id_seller,
     },
-    
   });
 
   if (!product) {
@@ -114,9 +177,25 @@ export const getDashboardStats = async (id_seller: number) => {
     },
   });
 
+  const totalRevenue = await prisma.order.aggregate({
+    _sum: {
+      total_price: true,
+    },
+    where: {
+      status: "ACCEPTED",
+      orderDetails: {
+        some: {
+          product: {
+            id_seller,
+          },
+        },
+      },
+    },
+  });
   return {
     totalProducts,
     totalOrders,
     pendingOrders,
+    totalRevenue: totalRevenue._sum.total_price || 0,
   };
 };
