@@ -62,10 +62,42 @@ export const updateOrderStatus = async (
     throw new Error("Order not found");
   }
 
-  return await prisma.order.update({
-    where: { id_order },
-    data: { status },
+  // update status order detail milik seller
+  await prisma.orderDetail.updateMany({
+    where: {
+      id_order,
+      product: {
+        id_seller,
+      },
+    },
+    data: {
+      status,
+    },
   });
+
+  // cek apakah masih ada order detail yang pending
+  const pending = await prisma.orderDetail.count({
+    where: {
+      id_order,
+      status: "PENDING",
+    },
+  });
+
+  // jika tidak ada pending, order menjadi ACCEPTED
+  if (pending === 0) {
+    await prisma.order.update({
+      where: {
+        id_order,
+      },
+      data: {
+        status: "ACCEPTED",
+      },
+    });
+  }
+
+  return {
+    message: "Status updated",
+  };
 };
 
 export const createProduct = async (
@@ -174,9 +206,7 @@ export const getDashboardStats = async (id_seller: number) => {
       product: {
         id_seller,
       },
-      order: {
-        status: "PENDING",
-      },
+      status: "PENDING",
     },
   });
 
@@ -188,11 +218,10 @@ export const getDashboardStats = async (id_seller: number) => {
       product: {
         id_seller,
       },
-      order: {
-        status: "ACCEPTED",
-      },
+      status: "ACCEPTED",
     },
   });
+
   return {
     totalProducts,
     totalOrders,

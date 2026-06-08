@@ -5,12 +5,17 @@ import adminRouter from "./admin";
 import sellerRouter from "./seller";
 import productRouter from "./product";
 import cartRouter from "./cart";
+import orderRouter from "./order";
+import buyerRouter from "./buyer";
 
 const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/admin", adminRouter);
 router.use("/seller", verifyToken, sellerRouter);
-router.use("/product",verifyToken, productRouter);
+router.use("/product", verifyToken, productRouter);
 router.use("/cart", verifyToken, cartRouter);
+router.use("/order", verifyToken, orderRouter);
+router.use("/buyer", verifyToken, buyerRouter);
+
 export default router;

@@ -278,6 +278,7 @@ export const checkout = async (req: AuthRequest, res: Response) => {
           qty: item.qty,
           price: item.product.price,
           subtotal: item.subtotal,
+          status: "PENDING"
         },
       });
     }

@@ -24,6 +24,11 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum OrderFinal {
+  PENDING
+  ACCEPTED
+}
+
 model User {
   id_user    Int      @id @default(autoincrement())
   name       String
@@ -120,7 +125,7 @@ model Order {
 
   total_price Decimal @db.Decimal(10, 2)
 
-  status OrderStatus @default(PENDING)
+  status OrderFinal @default(PENDING)
 
   order_date DateTime @default(now())
 
@@ -136,8 +141,9 @@ model OrderDetail {
   id_product Int
 
   qty      Int
-  price    Decimal @db.Decimal(10, 2)
-  subtotal Decimal @db.Decimal(10, 2)
+  price    Decimal     @db.Decimal(10, 2)
+  subtotal Decimal     @db.Decimal(10, 2)
+  status   OrderStatus @default(PENDING)
 
   order   Order   @relation(fields: [id_order], references: [id_order])
   product Product @relation(fields: [id_product], references: [id_product])
