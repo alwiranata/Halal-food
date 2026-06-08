@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import { getProducts } from "../../services/buyer";
+import { addToCart } from "../../services/cart";
 
 interface Product {
   id_product: number;
@@ -20,10 +21,17 @@ export default function Product() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterHalal, setFilterHalal] = useState("all");
+  const [qtyMap, setQtyMap] = useState<{ [key: number]: number }>({});
   useEffect(() => {
     loadProducts();
   }, []);
 
+  const handleQtyChange = (productId: number, value: number) => {
+    setQtyMap((prev) => ({
+      ...prev,
+      [productId]: value,
+    }));
+  };
   const loadProducts = async () => {
     try {
       const data = await getProducts();
@@ -35,6 +43,18 @@ export default function Product() {
     }
   };
 
+  const handleAddToCart = async (product_id: number) => {
+    try {
+      const qty = qtyMap[product_id] || 1;
+
+      await addToCart(product_id, qty);
+
+      alert("Berhasil masuk keranjang");
+    } catch (error) {
+      console.error(error);
+      alert("Gagal tambah ke cart");
+    }
+  };
   const getImageUrl = (path?: string) => {
     if (!path) return "";
 
@@ -201,9 +221,54 @@ export default function Product() {
                       </a>
                     )}
                   </div>
+                  <div className="mt-3 flex items-center justify-between bg-slate-100 rounded-xl px-2 py-1 gap-2">
+                    {/* MINUS */}
+                    <button
+                      onClick={() =>
+                        handleQtyChange(
+                          p.id_product,
+                          Math.max(1, (qtyMap[p.id_product] || 1) - 1),
+                        )
+                      }
+                      className="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-white rounded-lg"
+                    >
+                      −
+                    </button>
 
+                    {/* INPUT MANUAL */}
+                    <input
+                      type="number"
+                      min={1}
+                      value={qtyMap[p.id_product] || 1}
+                      onChange={(e) => {
+                        const value = Number(e.target.value);
+
+                        if (value < 1) {
+                          handleQtyChange(p.id_product, 1);
+                          return;
+                        }
+
+                        handleQtyChange(p.id_product, value);
+                      }}
+                      className="w-12 text-center bg-transparent outline-none text-sm font-semibold text-slate-700"
+                    />
+
+                    {/* PLUS */}
+                    <button
+                      onClick={() =>
+                        handleQtyChange(
+                          p.id_product,
+                          (qtyMap[p.id_product] || 1) + 1,
+                        )
+                      }
+                      className="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-white rounded-lg"
+                    >
+                      +
+                    </button>
+                  </div>
                   {/* BUTTON */}
                   <button
+                    onClick={() => handleAddToCart(p.id_product)}
                     className="
             mt-3
             w-full

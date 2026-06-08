@@ -100,112 +100,124 @@ export default function Orders() {
           </div>
         ) : (
           <div className="space-y-5">
-            {orders.map((order) => (
-              <div
-                key={order.id_order}
-                className="bg-white border rounded-xl shadow-sm overflow-hidden"
-              >
-                {/* HEADER CARD */}
-                <div className="p-5 border-b bg-gray-50 flex flex-col md:flex-row md:justify-between gap-4">
-                  <div>
-                    <h2 className="font-bold text-lg">
-                      Order #{order.id_order}
-                    </h2>
+            {orders.map((order) => {
+              const sellerTotal = order.orderDetails.reduce(
+                (sum, item) => sum + Number(item.subtotal),
+                0,
+              );
 
-                    <p className="text-sm text-gray-500">
-                      {new Date(order.order_date).toLocaleString()}
+              return (
+                <div
+                  key={order.id_order}
+                  className="bg-white border rounded-xl shadow-sm overflow-hidden"
+                >
+                  {/* HEADER CARD */}
+                  <div className="p-5 border-b bg-gray-50 flex flex-col md:flex-row md:justify-between gap-4">
+                    <div>
+                      <h2 className="font-bold text-lg">
+                        Order #{order.id_order}
+                      </h2>
+
+                      <p className="text-sm text-gray-500">
+                        {new Date(order.order_date).toLocaleString()}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      {getStatusBadge(order.status)}
+
+                      <p className="mt-2 font-semibold">
+                        Total:
+                        <span className="text-green-600 ml-1">
+                          Rp {sellerTotal.toLocaleString("id-ID")}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* BUYER */}
+                  <div className="p-5 border-b">
+                    <h3 className="font-semibold mb-2">Informasi Pembeli</h3>
+
+                    <p>
+                      <span className="font-medium">Nama:</span>{" "}
+                      {order.user.name}
+                    </p>
+
+                    <p>
+                      <span className="font-medium">Email:</span>{" "}
+                      {order.user.email}
+                    </p>
+
+                    <p>
+                      <span className="font-medium">Alamat:</span>{" "}
+                      {order.user.address || ""}
+                    </p>
+
+                    <p>
+                      <span className="font-medium">Telepon:</span>{" "}
+                      {order.user.phone || ""}
                     </p>
                   </div>
 
-                  <div className="text-right">
-                    {getStatusBadge(order.status)}
+                  {/* PRODUCT LIST */}
+                  <div className="p-5">
+                    <h3 className="font-semibold mb-3">Produk Dipesan</h3>
 
-                    <p className="mt-2 font-semibold">
-                      Total:
-                      <span className="text-green-600 ml-1">
-                        Rp {Number(order.total_price).toLocaleString()}
-                      </span>
-                    </p>
-                  </div>
-                </div>
+                    <div className="space-y-3">
+                      {order.orderDetails.map((item) => (
+                        <div
+                          key={item.id_order_detail}
+                          className="flex items-center gap-4 border rounded-lg p-3"
+                        >
+                          <img
+                            src={`http://localhost:3000/${item.product.product_image?.replace(
+                              /\\/g,
+                              "/",
+                            )}`}
+                            alt={item.product.product_name}
+                            className="w-20 h-20 object-cover rounded-lg border"
+                          />
 
-                {/* BUYER */}
-                <div className="p-5 border-b">
-                  <h3 className="font-semibold mb-2">Informasi Pembeli</h3>
+                          <div className="flex-1">
+                            <h4 className="font-semibold">
+                              {item.product.product_name}
+                            </h4>
 
-                  <p>
-                    <span className="font-medium">Nama:</span> {order.user.name}
-                  </p>
+                            <p className="text-gray-500">Qty: {item.qty}</p>
 
-                  <p>
-                    <span className="font-medium">Email:</span>{" "}
-                    {order.user.email}
-                  </p>
-                  <p>
-                    <span className="font-medium">Alamat:</span>{" "}
-                    {order.user.address || ""}
-                  </p>
-                  <p>
-                    <span className="font-medium">Telepon:</span>{" "}
-                    {order.user.phone || ""}
-                  </p>
-                </div>
-
-                {/* PRODUCT LIST */}
-                <div className="p-5">
-                  <h3 className="font-semibold mb-3">Produk Dipesan</h3>
-
-                  <div className="space-y-3">
-                    {order.orderDetails.map((item) => (
-                      <div
-                        key={item.id_order_detail}
-                        className="flex items-center gap-4 border rounded-lg p-3"
-                      >
-                        <img
-                          src={`http://localhost:3000/${item.product.product_image?.replace(
-                            /\\/g,
-                            "/",
-                          )}`}
-                          alt={item.product.product_name}
-                          className="w-20 h-20 object-cover rounded-lg border"
-                        />
-
-                        <div className="flex-1">
-                          <h4 className="font-semibold">
-                            {item.product.product_name}
-                          </h4>
-
-                          <p className="text-gray-500">Qty: {item.qty}</p>
-
-                          <p className="font-medium text-green-600">
-                            Rp {Number(item.subtotal).toLocaleString()}
-                          </p>
+                            <p className="font-medium text-green-600">
+                              Rp {Number(item.subtotal).toLocaleString("id-ID")}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
+
+                  {/* ACTION */}
+                  {order.status === "PENDING" && (
+                    <div className="p-5 border-t flex justify-end gap-3">
+                      <button
+                        onClick={() =>
+                          handleUpdate(order.id_order, "CANCELLED")
+                        }
+                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                      >
+                        Cancel Order
+                      </button>
+
+                      <button
+                        onClick={() => handleUpdate(order.id_order, "ACCEPTED")}
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                      >
+                        Accept Order
+                      </button>
+                    </div>
+                  )}
                 </div>
-
-                {/* ACTION */}
-                {order.status === "PENDING" && (
-                  <div className="p-5 border-t flex justify-end gap-3">
-                    <button
-                      onClick={() => handleUpdate(order.id_order, "CANCELLED")}
-                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg"
-                    >
-                      Cancel Order
-                    </button>
-
-                    <button
-                      onClick={() => handleUpdate(order.id_order, "ACCEPTED")}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
-                    >
-                      Accept Order
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

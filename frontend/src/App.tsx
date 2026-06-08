@@ -10,6 +10,7 @@ import NotFoundPages from "./pages/404";
 import Products from "./pages/seller/Products";
 import Orders from "./pages/seller/Orders";
 import ProductsBuyer from "./pages/buyer/Products";
+import Cart from "./pages/buyer/Cart";
 function App() {
   return (
     <Routes>
@@ -22,6 +23,7 @@ function App() {
       <Route path="/seller/orders" element={<Orders />} />
       <Route path="/buyer" element={<BuyerDashboard />} />
       <Route path="/buyer/products" element={<ProductsBuyer />} />
+      <Route path="/buyer/cart" element={<Cart />} />
       {/* Halaman 404 */}
       <Route path="*" element={<NotFoundPages />} />
     </Routes>
