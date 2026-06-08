@@ -7,6 +7,7 @@ import productRouter from "./product";
 import cartRouter from "./cart";
 import orderRouter from "./order";
 import buyerRouter from "./buyer";
+import profileRouter from "./profile";
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use("/product", verifyToken, productRouter);
 router.use("/cart", verifyToken, cartRouter);
 router.use("/order", verifyToken, orderRouter);
 router.use("/buyer", verifyToken, buyerRouter);
+router.use("/profile", verifyToken, profileRouter);
 
 export default router;
