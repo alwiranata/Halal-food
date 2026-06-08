@@ -1,8 +1,13 @@
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const navigate = useNavigate();
 
   return (
-    <div className="bg-white shadow p-4 flex justify-end">
+    <div
+      onClick={() => navigate("/profile")}
+      className="bg-white shadow p-4 flex justify-end"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

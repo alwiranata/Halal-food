@@ -24,7 +24,10 @@ interface Order {
 
 export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<{
+    order: Order;
+    index: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -74,6 +77,11 @@ export default function Orders() {
     }
   };
 
+  const formatDate = (date: string) => {
+    const d = new Date(date);
+    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+  };
+
   const getImageUrl = (path?: string) => {
     if (!path) return "";
 
@@ -121,12 +129,16 @@ export default function Orders() {
                   </td>
                 </tr>
               ) : (
-                orders.map((order) => (
+                orders.map((order, index) => (
                   <tr key={order.id_order} className="border-t">
-                    <td className="p-4 font-medium">#{order.id_order}</td>
-
+                    {/* NO */}
+                    <td className="p-3 text-center font-medium text-gray-500">
+                      {index + 1}
+                    </td>
                     <td className="p-4">
-                      {new Date(order.order_date).toLocaleDateString("id-ID")}
+                      <td className="p-4">
+                        {formatDate(order.order_date)}
+                      </td>{" "}
                     </td>
 
                     <td className="p-4">{order.orderDetails.length} Produk</td>
@@ -139,8 +151,8 @@ export default function Orders() {
 
                     <td className="p-4 text-center">
                       <button
-                        onClick={() => setSelectedOrder(order)}
-                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                        onClick={() => setSelectedOrder({ order, index })}
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -182,25 +194,27 @@ export default function Orders() {
               </button>
 
               <h2 className="text-xl font-bold mb-5">
-                Detail Order #{selectedOrder.id_order}
+                Detail Order #{selectedOrder.index + 1}
               </h2>
 
               <div className="grid grid-cols-2 gap-4 mb-5">
                 <div>
                   <p>
                     <b>Tanggal :</b>{" "}
-                    {new Date(selectedOrder.order_date).toLocaleString("id-ID")}
+                    {formatDate(selectedOrder.order.order_date)}
                   </p>
 
                   <p>
-                    <b>Status :</b> {getStatusBadge(selectedOrder.status)}
+                    <b>Status :</b> {getStatusBadge(selectedOrder.order.status)}
                   </p>
                 </div>
 
                 <div className="text-right">
                   <p className="text-lg font-bold text-green-600">
                     Rp{" "}
-                    {Number(selectedOrder.total_price).toLocaleString("id-ID")}
+                    {Number(selectedOrder.order.total_price).toLocaleString(
+                      "id-ID",
+                    )}
                   </p>
                 </div>
               </div>
@@ -217,7 +231,7 @@ export default function Orders() {
                 </thead>
 
                 <tbody>
-                  {selectedOrder.orderDetails.map((item) => (
+                  {selectedOrder.order.orderDetails.map((item, index) => (
                     <tr key={item.id_order_detail} className="border-t">
                       <td className="p-3">
                         <div className="flex items-center gap-3">

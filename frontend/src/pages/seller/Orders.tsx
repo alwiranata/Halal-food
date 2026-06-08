@@ -29,7 +29,10 @@ interface Order {
 
 export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<{
+    order: Order;
+    index: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -163,7 +166,7 @@ export default function Orders() {
 
                       <td className="p-4 text-center">
                         <button
-                          onClick={() => setSelectedOrder(order)}
+                          onClick={() => setSelectedOrder({ order, index })}
                           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
                         >
                           <svg
@@ -207,7 +210,7 @@ export default function Orders() {
               </button>
 
               <h2 className="text-xl font-bold mb-5">
-                Detail Order #{selectedOrder.id_order}
+                Detail Order #{selectedOrder.index + 1}
               </h2>
 
               {/* DATA PEMBELI */}
@@ -215,19 +218,19 @@ export default function Orders() {
                 <h3 className="font-semibold mb-3">Informasi Pembeli</h3>
 
                 <p>
-                  <b>Nama:</b> {selectedOrder.user.name}
+                  <b>Nama:</b> {selectedOrder.order.user.name}
                 </p>
 
                 <p>
-                  <b>Email:</b> {selectedOrder.user.email}
+                  <b>Email:</b> {selectedOrder.order.user.email}
                 </p>
 
                 <p>
-                  <b>Alamat:</b> {selectedOrder.user.address || "-"}
+                  <b>Alamat:</b> {selectedOrder.order.user.address || "-"}
                 </p>
 
                 <p>
-                  <b>Telepon:</b> {selectedOrder.user.phone || "-"}
+                  <b>Telepon:</b> {selectedOrder.order.user.phone || "-"}
                 </p>
               </div>
 
@@ -243,7 +246,7 @@ export default function Orders() {
                 </thead>
 
                 <tbody>
-                  {selectedOrder.orderDetails.map((item) => (
+                  {selectedOrder.order.orderDetails.map((item, index) => (
                     <tr
                       key={item.id_order_detail}
                       className="border-t align-middle"
@@ -274,21 +277,19 @@ export default function Orders() {
               </table>
 
               {/* TOTAL */}
-              <div className="mt-5 text-right">
-                <h3 className="font-bold text-lg text-green-600">
-                  Total Rp{" "}
-                  {selectedOrder.orderDetails
-                    .reduce((sum, item) => sum + Number(item.subtotal), 0)
-                    .toLocaleString("id-ID")}
-                </h3>
-              </div>
+              <h3 className="font-bold text-lg text-green-600">
+                Total Rp{" "}
+                {selectedOrder.order.orderDetails
+                  .reduce((sum, item) => sum + Number(item.subtotal), 0)
+                  .toLocaleString("id-ID")}
+              </h3>
 
               {/* ACTION */}
-              {selectedOrder.orderDetails[0]?.status === "PENDING" && (
+              {selectedOrder.order.orderDetails[0]?.status === "PENDING" && (
                 <div className="flex justify-end gap-3 mt-5">
                   <button
                     onClick={() =>
-                      handleUpdate(selectedOrder.id_order, "CANCELLED")
+                      handleUpdate(selectedOrder.order.id_order, "CANCELLED")
                     }
                     className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
                   >
@@ -297,7 +298,7 @@ export default function Orders() {
 
                   <button
                     onClick={() =>
-                      handleUpdate(selectedOrder.id_order, "ACCEPTED")
+                      handleUpdate(selectedOrder.order.id_order, "ACCEPTED")
                     }
                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
                   >

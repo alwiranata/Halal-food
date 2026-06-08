@@ -12,6 +12,7 @@ import Orders from "./pages/seller/Orders";
 import ProductsBuyer from "./pages/buyer/Products";
 import Cart from "./pages/buyer/Cart";
 import BuyerOrders from "./pages/buyer/Orders";
+import Profile from "./pages/Profile";
 function App() {
   return (
     <Routes>
@@ -26,6 +27,8 @@ function App() {
       <Route path="/buyer/products" element={<ProductsBuyer />} />
       <Route path="/buyer/cart" element={<Cart />} />
       <Route path="/buyer/orders" element={<BuyerOrders />} />{" "}
+      <Route path="/profile" element={<Profile />} />
+    
       {/* Halaman 404 */}
       <Route path="*" element={<NotFoundPages />} />
     </Routes>
