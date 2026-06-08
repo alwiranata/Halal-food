@@ -21,11 +21,14 @@ export const getSellerOrders = async (id_seller: number) => {
           email: true,
           address: true,
           phone: true,
-          role: true,
-          created_at: true,
         },
       },
       orderDetails: {
+        where: {
+          product: {
+            id_seller,
+          },
+        },
         include: {
           product: true,
         },
@@ -177,18 +180,16 @@ export const getDashboardStats = async (id_seller: number) => {
     },
   });
 
-  const totalRevenue = await prisma.order.aggregate({
+  const totalRevenue = await prisma.orderDetail.aggregate({
     _sum: {
-      total_price: true,
+      subtotal: true,
     },
     where: {
-      status: "ACCEPTED",
-      orderDetails: {
-        some: {
-          product: {
-            id_seller,
-          },
-        },
+      product: {
+        id_seller,
+      },
+      order: {
+        status: "ACCEPTED",
       },
     },
   });
@@ -196,6 +197,6 @@ export const getDashboardStats = async (id_seller: number) => {
     totalProducts,
     totalOrders,
     pendingOrders,
-    totalRevenue: totalRevenue._sum.total_price || 0,
+    totalRevenue: totalRevenue._sum.subtotal || 0,
   };
 };
