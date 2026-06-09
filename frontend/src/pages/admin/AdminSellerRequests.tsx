@@ -13,7 +13,9 @@ export default function SellerRequests() {
   useEffect(() => {
     fetchSellers();
   }, []);
-
+  const getImageUrl = (path: string) => {
+    return `http://localhost:3000/${path.replace(/\\/g, "/")}`;
+  };
   const fetchSellers = async () => {
     try {
       const res = await getPendingSellers();
@@ -64,7 +66,7 @@ export default function SellerRequests() {
             <h2 className="text-2xl font-bold mb-4 text-center">Foto KTP</h2>
 
             <img
-              src={`http://localhost:3000/uploads/${selectedKtp}`}
+              src={getImageUrl(selectedKtp)}
               alt="KTP"
               className="w-full h-auto max-h-[70vh] object-contain rounded-lg border"
             />

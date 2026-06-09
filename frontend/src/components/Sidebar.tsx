@@ -74,6 +74,10 @@ export default function Sidebar() {
             <NavLink to="/buyer/orders" className={menuClass}>
               Pesanan
             </NavLink>
+
+            <NavLink to="/buyer/registerSeller" className={menuClass}>
+              Daftar Seller
+            </NavLink>
           </>
         )}
       </div>
