@@ -8,12 +8,13 @@ import cartRouter from "./cart";
 import orderRouter from "./order";
 import buyerRouter from "./buyer";
 import profileRouter from "./profile";
-
+import sellerRegisterRouter from "./user";
 const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/admin", adminRouter);
 router.use("/seller", verifyToken, sellerRouter);
+router.use("/sellers", verifyToken, sellerRegisterRouter);
 router.use("/product", verifyToken, productRouter);
 router.use("/cart", verifyToken, cartRouter);
 router.use("/order", verifyToken, orderRouter);

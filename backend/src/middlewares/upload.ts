@@ -11,9 +11,11 @@ const createFolderIfNotExists = (folderPath: string) => {
 
 const productPath = "uploads/products";
 const certificatePath = "uploads/certificates";
+const ktpPath = "uploads/ktp"; // 👈 TAMBAHAN BARU
 
 createFolderIfNotExists(productPath);
 createFolderIfNotExists(certificatePath);
+createFolderIfNotExists(ktpPath); // 👈 TAMBAHAN BARU
 
 // storage khusus product image
 const productStorage = multer.diskStorage({
@@ -22,6 +24,11 @@ const productStorage = multer.diskStorage({
       cb(null, productPath);
     } else if (file.fieldname === "halal_certificate") {
       cb(null, certificatePath);
+    } else if (file.fieldname === "ktp_photo") {
+      // 👈 TAMBAHAN SELLER REGISTER
+      cb(null, ktpPath);
+    } else {
+      cb(new Error("Unknown field"), "");
     }
   },
   filename: (req, file, cb) => {
